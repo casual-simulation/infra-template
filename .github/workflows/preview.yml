@@ -1,0 +1,43 @@
+name: Preview
+
+on:
+    pull_request:
+        tags-ignore:
+            - '**'
+    workflow_dispatch:
+
+jobs:
+    preview:
+        name: Preview
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                node-version: [18.x]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v4
+              repository: 'casual-simulation/casualos'
+              ref: 'master'
+              path: casualos
+              fetch-depth: 20
+            - uses: actions/checkout@v4
+              path: infra
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: build casualos
+              working-directory: casualos
+              run: |
+                  corepack enable
+                  npm run bootstrap
+                  npm run build
+              env:
+                  CI: true
+            - uses: pulumi/actions@v5
+            - name: preview infrastructure
+              working-directory: infra
+              run: |
+                  pnpm install
+                  pulumi login file://./.pulumi
+                  pulumi preview --diff > ./previews/preview.diff

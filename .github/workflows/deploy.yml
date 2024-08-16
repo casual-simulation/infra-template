@@ -1,0 +1,102 @@
+name: Deploy
+
+on:
+    push:
+        branches-ignore:
+            - 'master'
+            - 'staging'
+            - 'release/**'
+        tags-ignore:
+            - '**'
+    pull_request:
+        branches-ignore:
+            - 'master'
+            - 'staging'
+            - 'release/**'
+        tags-ignore:
+            - '**'
+
+jobs:
+    test:
+        name: Test
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macOS-latest, windows-latest]
+                node-version: [18.x]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v1
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Fix node-gyp (Windows Only)
+              if: matrix.os == 'windows-latest'
+              shell: pwsh
+              run: |
+                  npm install -g node-gyp
+                  npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+            - name: npm install and test
+              run: |
+                  corepack enable
+                  npm run bootstrap
+                  npx --node-options="--max_old_space_size=4096" jest --detectOpenHandles --forceExit --no-cache
+              env:
+                  CI: true
+    build:
+        name: Build AUX
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macOS-latest, windows-latest]
+                node-version: [18.x]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v1
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Fix node-gyp (Windows Only)
+              if: matrix.os == 'windows-latest'
+              shell: pwsh
+              run: |
+                  npm install -g node-gyp
+                  npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+            - name: npm install and build
+              run: |
+                  corepack enable
+                  npm run bootstrap
+                  npm run build
+              env:
+                  CI: true
+    docs:
+        name: Build Docs
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macOS-latest, windows-latest]
+                node-version: [18.x]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v1
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Fix node-gyp (Windows Only)
+              if: matrix.os == 'windows-latest'
+              shell: pwsh
+              run: |
+                  npm install -g node-gyp
+                  npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+            - name: npm install
+              run: |
+                  corepack enable
+                  npm run bootstrap
+              env:
+                  CI: true
+            - name: build docs
+              run: |
+                  cd docs
+                  npm run build
+              env:
+                  CI: true

@@ -1,0 +1,24 @@
+{
+  "name": "infra-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Casual Simulation",
+  "license": "MIT",
+  "dependencies": {
+    "@casual-simulation/infra": "3.3.8-alpha.0",
+    "@pulumi/aws": "^6.0.0",
+    "@pulumi/aws-apigateway": "^2.0.0",
+    "@pulumi/awsx": "^2.0.2",
+    "@pulumi/pulumi": "^3.113.0",
+    "@pulumi/aws-native": "^0.116.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18",
+    "typescript": "^5.0.0"
+  }
+}
