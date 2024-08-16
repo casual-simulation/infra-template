@@ -49,8 +49,8 @@ jobs:
           pwd
           pulumi login file://.
           pulumi stack select dev
-          pulumi preview > ./preview.simple.diff
-          pulumi preview --diff > ./preview.diff
+          pulumi --verbose=9 --logtostderr --logflow preview > ./preview.simple.diff
+          # pulumi preview --diff > ./preview.diff
         env:
           PULUMI_CONFIG_PASSPHRASE_FILE: '${{ github.workspace }}/infra/.secrets/dev.txt'
       - uses: actions/upload-artifact@v4
