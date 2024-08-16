@@ -1,51 +1,54 @@
 name: Preview Dev
 
 on:
-    pull_request:
-        tags-ignore:
-            - '**'
-    workflow_dispatch:
+  pull_request:
+    tags-ignore:
+      - "**"
+  workflow_dispatch:
 
 jobs:
-    preview:
-        name: Preview
-        strategy:
-            matrix:
-                os: [ubuntu-latest]
-                node-version: [18.x]
-        runs-on: ${{ matrix.os }}
-        steps:
-            - uses: actions/checkout@v4
-              repository: 'casual-simulation/casualos'
-              ref: 'master'
-              path: casualos
-              fetch-depth: 20
-            - uses: actions/checkout@v4
-              path: infra
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v1
-              with:
-                  node-version: ${{ matrix.node-version }}
-            - name: build casualos
-              working-directory: casualos
-              run: |
-                  corepack enable
-                  npm run bootstrap
-                  npm run build
-              env:
-                  CI: true
-            - uses: pulumi/actions@v5
-            - name: preview infrastructure
-              working-directory: infra
-              run: |
-                  pnpm install
-                  pulumi login file://./.pulumi
-                  export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
-                  pulumi preview > ./preview.simple.diff
-                  pulumi preview --diff > ./preview.diff
-            - uses: actions/upload-artifact@v4
-              with:
-                name: preview-changes
-                path: |
-                    infra/preview.simple.diff
-                    infra/preview.diff
+  preview:
+    name: Preview
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "casual-simulation/casualos"
+          ref: "master"
+          path: casualos
+          fetch-depth: 20
+      - uses: actions/checkout@v4
+        with:
+          path: infra
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: build casualos
+        working-directory: casualos
+        run: |
+          corepack enable
+          npm run bootstrap
+          npm run build
+        env:
+          CI: true
+      - uses: pulumi/actions@v5
+      - name: preview infrastructure
+        working-directory: infra
+        run: |
+          pnpm install
+          pulumi login file://./.pulumi
+          pulumi stack select dev
+          export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
+          pulumi preview > ./preview.simple.diff
+          pulumi preview --diff > ./preview.diff
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-changes
+          path: |
+            infra/preview.simple.diff
+            infra/preview.diff
