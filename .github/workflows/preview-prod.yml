@@ -1,0 +1,61 @@
+name: Preview Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        type: string
+        default: 'feature/infra'
+        required: false
+        description: 'The CasualOS repo ref that should be deployed.'
+
+jobs:
+  preview:
+    name: Preview
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "casual-simulation/casualos"
+          ref: ${{ inputs.ref }}
+          path: casualos
+          fetch-depth: 250
+          fetch-tags: true
+      - uses: actions/checkout@v4
+        with:
+          path: infra
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: build casualos
+        working-directory: casualos
+        run: |
+          corepack enable
+          npm run bootstrap
+          npm run build
+        env:
+          CI: true
+          SERVER_CONFIG_FILE: '${{ github.workspace }}/infra/build-config/server-config.prod.json'
+      - uses: pulumi/actions@v5
+      - name: preview infrastructure
+        working-directory: infra
+        run: |
+          pnpm install
+          pwd
+          pulumi login file://.
+          pulumi stack select dev
+          pulumi preview > ./preview.simple.diff
+          pulumi preview --diff > ./preview.diff
+        env:
+          PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PulumiConfigPassphrase }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: preview-changes
+          path: |
+            infra/preview.simple.diff
+            infra/preview.diff
