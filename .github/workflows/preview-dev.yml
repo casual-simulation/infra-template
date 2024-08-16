@@ -43,7 +43,7 @@ jobs:
         run: |
           pnpm install
           pwd
-          pulumi login file://./.pulumi
+          pulumi login file://.
           pulumi stack select dev
           export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
           pulumi preview > ./preview.simple.diff
