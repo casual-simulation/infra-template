@@ -1,9 +1,6 @@
 name: Preview Dev
 
 on:
-  pull_request:
-    tags-ignore:
-      - "**"
   workflow_dispatch:
 
 jobs:
@@ -20,7 +17,7 @@ jobs:
           repository: "casual-simulation/casualos"
           ref: "feature/infra"
           path: casualos
-          fetch-depth: 20
+          fetch-depth: 250
           fetch-tags: true
       - uses: actions/checkout@v4
         with:
