@@ -42,6 +42,7 @@ jobs:
         working-directory: infra
         run: |
           pnpm install
+          pwd
           pulumi login file://./.pulumi
           pulumi stack select dev
           export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
