@@ -2,6 +2,12 @@ name: Preview Dev
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        type: string
+        default: 'feature/infra'
+        required: false
+        description: 'The CasualOS repo ref that should be deployed.'
 
 jobs:
   preview:
@@ -15,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: "casual-simulation/casualos"
-          ref: "feature/infra"
+          ref: ${{ inputs.ref }}
           path: casualos
           fetch-depth: 250
           fetch-tags: true
@@ -34,7 +40,7 @@ jobs:
           npm run build
         env:
           CI: true
-          SERVER_CONFIG_FILE: ../infra/build-config/server-config.dev.json
+          SERVER_CONFIG_FILE: '${{ github.workspace }}/infra/build-config/server-config.dev.json'
       - uses: pulumi/actions@v5
       - name: preview infrastructure
         working-directory: infra
@@ -43,9 +49,10 @@ jobs:
           pwd
           pulumi login file://.
           pulumi stack select dev
-          export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
           pulumi preview > ./preview.simple.diff
           pulumi preview --diff > ./preview.diff
+        env:
+          PULUMI_CONFIG_PASSPHRASE_FILE: '${{ github.workspace }}/infra/.secrets/dev.txt'
       - uses: actions/upload-artifact@v4
         with:
           name: preview-changes
