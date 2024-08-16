@@ -1,0 +1,53 @@
+name: Deploy Dev
+
+on:
+  workflow_dispatch:
+
+jobs:
+  preview:
+    name: Deploy
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "casual-simulation/casualos"
+          ref: "feature/infra"
+          path: casualos
+          fetch-depth: 250
+          fetch-tags: true
+      - uses: actions/checkout@v4
+        with:
+          path: infra
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: build casualos
+        working-directory: casualos
+        run: |
+          corepack enable
+          npm run bootstrap
+          npm run build
+        env:
+          CI: true
+          SERVER_CONFIG_FILE: ../infra/build-config/server-config.dev.json
+      - uses: pulumi/actions@v5
+      - name: deploy infrastructure
+        working-directory: infra
+        run: |
+          pnpm install
+          pwd
+          pulumi login file://.
+          pulumi stack select dev
+          export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
+          pulumi up
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Updated dev stack"
+          git push
