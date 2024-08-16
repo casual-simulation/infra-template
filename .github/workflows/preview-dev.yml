@@ -21,6 +21,7 @@ jobs:
           ref: "master"
           path: casualos
           fetch-depth: 20
+          fetch-tags: true
       - uses: actions/checkout@v4
         with:
           path: infra
