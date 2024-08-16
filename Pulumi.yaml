@@ -1,4 +1,4 @@
-name: .pulumi
+name: casualos
 runtime:
   name: nodejs
   options:

@@ -1,17 +1,14 @@
 {
   "name": "infra-template",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
     "login": "pulumi login file://.",
+    "preview": "cross-env PULUMI_CONFIG_PASSPHRASE_FILE=./.secrets/dev.txt pulumi preview --diff",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
   "author": "Casual Simulation",
   "license": "MIT",
   "dependencies": {
-    "@casual-simulation/infra": "3.3.8-alpha.0",
+    "@casual-simulation/infra": "3.3.8-alpha.3",
     "@pulumi/aws": "^6.0.0",
     "@pulumi/aws-apigateway": "^2.0.0",
     "@pulumi/awsx": "^2.0.2",
@@ -20,6 +17,7 @@
   },
   "devDependencies": {
     "@types/node": "^18",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "cross-env": "7.0.3"
   }
 }

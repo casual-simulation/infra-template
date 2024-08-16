@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@casual-simulation/infra':
-    specifier: 3.3.8-alpha.0
-    version: 3.3.8-alpha.0(typescript@5.5.4)
+    specifier: 3.3.8-alpha.3
+    version: 3.3.8-alpha.3(typescript@5.5.4)
   '@pulumi/aws':
     specifier: ^6.0.0
     version: 6.49.1(typescript@5.5.4)
@@ -28,6 +28,9 @@ devDependencies:
   '@types/node':
     specifier: ^18
     version: 18.19.44
+  cross-env:
+    specifier: 7.0.3
+    version: 7.0.3
   typescript:
     specifier: ^5.0.0
     version: 5.5.4
@@ -505,14 +508,15 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@casual-simulation/infra@3.3.8-alpha.0(typescript@5.5.4):
-    resolution: {integrity: sha512-xFVdIMqmhK3J9kpod6gbTU0IrqG2qHSdgLLnjFjxNGXe+WnjH6xJApPOntmqIDB93yl8efqI4wiXlLkdwFAPqQ==}
+  /@casual-simulation/infra@3.3.8-alpha.3(typescript@5.5.4):
+    resolution: {integrity: sha512-pU+OR+XwusjO4ZP3gDh9IVQ35MOhufm7IahMfsgXpfJD5dxomHjfR/1MvDP58KuNboYQOROzczbqb+F8yv03wg==}
     dependencies:
       '@pulumi/aws': 6.49.1(typescript@5.5.4)
       '@pulumi/aws-apigateway': 2.6.0(typescript@5.5.4)
       '@pulumi/aws-native': 0.116.0(typescript@5.5.4)
       '@pulumi/awsx': 2.14.0(typescript@5.5.4)
       '@pulumi/pulumi': 3.129.0(typescript@5.5.4)
+      lodash: 4.17.21
     transitivePeerDependencies:
       - aws-crt
       - bluebird
@@ -1811,6 +1815,14 @@ packages:
     resolution: {integrity: sha512-L3sHRo1pXXEqX8VU28kfgUY+YGsk09hPqZiZmLacNib6XNTCM8ubYeT7ryXQw8asB1sKgcU5lkB7ONug08aB8w==}
     dev: false
 
+  /cross-env@7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
+    dev: true
+
   /cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
@@ -1818,7 +1830,6 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
-    dev: false
 
   /cssesc@3.0.0:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
@@ -2259,7 +2270,6 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
-    dev: false
 
   /isexe@3.1.1:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
@@ -2332,6 +2342,10 @@ packages:
 
   /lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
+    dev: false
+
+  /lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: false
 
   /long@5.2.3:
@@ -2683,7 +2697,6 @@ packages:
   /path-key@3.1.1:
     resolution: {integrity: sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==}
     engines: {node: '>=8'}
-    dev: false
 
   /path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
@@ -2894,12 +2907,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       shebang-regex: 3.0.0
-    dev: false
 
   /shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
-    dev: false
 
   /shimmer@1.2.1:
     resolution: {integrity: sha512-sQTKC1Re/rM6XyFM6fIAGHRPVGvyXfgzIDvzoq608vM+jeyVD0Tu1E6Np0Kc2zAIFWIj963V2800iF/9LPieQw==}
@@ -3175,7 +3186,6 @@ packages:
     hasBin: true
     dependencies:
       isexe: 2.0.0
-    dev: false
 
   /which@4.0.0:
     resolution: {integrity: sha512-GlaYyEb07DPxYCKhKzplCWBJtvxZcZMrL+4UkrTSJHHPyZU4mYYTv3qaOe77H7EODLSSopAUFAc6W8U4yqvscg==}

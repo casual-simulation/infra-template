@@ -1,1 +1,5 @@
-encryptionsalt: v1:QFUBps5oMC0=:v1:ujK1dCvyihPPrZ7g:rVcaIpOxtv3+dV1x6Vro3bz2k2a0rA==
+encryptionsalt: v1:jbr5CCR2wqc=:v1:dEWbW/FGjS0VFtct:OSx6tNNz8+Q7ZVkJn9X89JnAFE6utA==
+config:
+  casualos:allowedApiOrigins: http://localhost:3000
+  casualos:allowedOrigins: http://localhost:3002
+  aws-native:region: us-east-1
