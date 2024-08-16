@@ -44,7 +44,7 @@ jobs:
           pulumi login file://.
           pulumi stack select dev
           export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
-          pulumi up
+          pulumi up --yes
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
