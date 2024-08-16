@@ -43,3 +43,9 @@ jobs:
                   export PULUMI_CONFIG_PASSPHRASE_FILE="./.secrets/dev.txt"
                   pulumi preview > ./preview.simple.diff
                   pulumi preview --diff > ./preview.diff
+            - uses: actions/upload-artifact@v4
+              with:
+                name: preview-changes
+                path: |
+                    infra/preview.simple.diff
+                    infra/preview.diff
